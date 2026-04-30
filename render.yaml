@@ -1,13 +1,11 @@
-services:
-  # PostgreSQL Database
-  - type: pserv
-    name: elite-companion-db
-    env: postgresql
+databases:
+  - name: elite-companion-db
     databaseName: elite_companion
     user: elite
     region: oregon
     plan: free
 
+services:
   # Backend API
   - type: web
     name: elite-companion-api
