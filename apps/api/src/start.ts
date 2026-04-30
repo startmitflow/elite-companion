@@ -18,9 +18,13 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const httpServer = createServer(app);
 
+// Log database connection info
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+
 // Initialize database
 const pool = initPool(
-  process.env.DATABASE_URL!,
+  process.env.DATABASE_URL || process.env.POSTGRES_URL,
   process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 );
 
@@ -31,7 +35,17 @@ const io = initSocket(httpServer, process.env.FRONTEND_URL || 'http://localhost:
 async function runMigrations() {
   try {
     console.log('Running database migrations...');
-    const initSql = fs.readFileSync(path.join(__dirname, 'db', 'init.sql'), 'utf8');
+    // In production, the file is in src/db, not dist/db
+    const initSqlPath = fs.existsSync(path.join(__dirname, 'db', 'init.sql'))
+      ? path.join(__dirname, 'db', 'init.sql')
+      : path.join(process.cwd(), 'src/db/init.sql');
+
+    if (!fs.existsSync(initSqlPath)) {
+      console.log('No init.sql found, skipping migrations');
+      return;
+    }
+
+    const initSql = fs.readFileSync(initSqlPath, 'utf8');
     await pool.query(initSql);
     console.log('Migrations completed successfully');
   } catch (error) {
