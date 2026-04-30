@@ -1,5 +1,5 @@
 {
-  "name": "@elite-companion/api",
+  "name": "elite-companion-api",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -9,9 +9,7 @@
   "scripts": {
     "dev": "tsx watch src/start.ts",
     "build": "tsc",
-    "start": "node dist/start.js",
-    "db:migrate": "tsx src/db/migrate.ts",
-    "db:seed": "tsx src/db/seed.ts"
+    "start": "node dist/start.js"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -25,7 +23,6 @@
     "jsonwebtoken": "^9.0.2",
     "socket.io": "^4.6.1",
     "uuid": "^9.0.0",
-    "zod": "^3.22.4",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {

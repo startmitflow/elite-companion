@@ -12,6 +12,7 @@ services:
     env: node
     region: oregon
     plan: free
+    branch: main
     rootDir: apps/api
     buildCommand: npm install && npm run build
     startCommand: npm start
@@ -40,6 +41,7 @@ services:
     name: elite-companion
     env: static
     region: oregon
+    branch: main
     rootDir: apps/web
     buildCommand: npm install && npm run build
     staticPublishPath: dist
