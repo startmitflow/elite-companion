@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Elite Companion Settings</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #ff6600;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #888;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #2a2a2a;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ff6600;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #ff8c42;
+    }
+    button:disabled {
+      background: #666;
+      cursor: not-allowed;
+    }
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .status.connected {
+      background: #1a4d1a;
+      color: #4ade80;
+    }
+    .status.error {
+      background: #4d1a1a;
+      color: #f87171;
+    }
+    .status.connecting {
+      background: #4d4d1a;
+      color: #facc15;
+    }
+    .info {
+      margin-top: 20px;
+      padding: 15px;
+      background: #2a2a2a;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #888;
+    }
+    .info strong {
+      color: #ff6600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Elite Companion</h1>
+
+    <div class="status connecting" id="status">
+      Not Connected
+    </div>
+
+    <div style="margin-top: 20px;">
+      <label for="token">API Token</label>
+      <input type="password" id="token" placeholder="Paste your API token from the web app">
+    </div>
+
+    <button onclick="connect()" id="connectBtn">Connect</button>
+
+    <div class="info">
+      <strong>How to get your API token:</strong><br>
+      1. Open the Elite Companion web app<br>
+      2. Go to Settings<br>
+      3. Click "Generate API Token"<br>
+      4. Copy and paste it here
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    const Store = require('electron-store');
+    const store = new Store({ name: 'config' });
+
+    const tokenInput = document.getElementById('token');
+    const statusDiv = document.getElementById('status');
+    const connectBtn = document.getElementById('connectBtn');
+
+    // Load saved token
+    tokenInput.value = store.get('apiToken', '');
+
+    async function connect() {
+      const token = tokenInput.value.trim();
+
+      if (!token) {
+        showStatus('Please enter your API token', 'error');
+        return;
+      }
+
+      showStatus('Connecting...', 'connecting');
+      connectBtn.disabled = true;
+
+      try {
+        // Test the connection
+        const response = await fetch('http://localhost:3001/auth/me', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          store.set('apiToken', token);
+          showStatus('Connected!', 'connected');
+
+          // Notify main process
+          ipcRenderer.send('token-saved', token);
+
+          setTimeout(() => {
+            window.close();
+          }, 1500);
+        } else {
+          showStatus('Invalid token', 'error');
+          connectBtn.disabled = false;
+        }
+      } catch (error) {
+        showStatus('Connection failed. Is the API running?', 'error');
+        connectBtn.disabled = false;
+      }
+    }
+
+    function showStatus(message, type) {
+      statusDiv.textContent = message;
+      statusDiv.className = `status ${type}`;
+    }
+  </script>
+</body>
+</html>

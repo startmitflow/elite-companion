@@ -1,0 +1,24 @@
+{
+  "name": "elite-companion",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Elite Dangerous Odyssey Companion App",
+  "scripts": {
+    "dev": "pnpm run --parallel dev:web dev:api dev:desktop",
+    "dev:web": "pnpm --filter @elite-companion/web dev",
+    "dev:api": "pnpm --filter @elite-companion/api dev",
+    "dev:desktop": "pnpm --filter @elite-companion/desktop dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "db:migrate": "pnpm --filter @elite-companion/api db:migrate",
+    "db:seed": "pnpm --filter @elite-companion/api db:seed"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

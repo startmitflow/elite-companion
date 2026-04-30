@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Eurostile';
+  src: url('/fonts/Eurostile.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Eurostile', system-ui, sans-serif;
+  background-color: #0a0a0a;
+  color: #ffffff;
+}
+
+/* Elite Dangerous themed scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ff6600;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff8c42;
+}
+
+/* Panel styles */
+.panel {
+  @apply bg-elite-panel border border-elite-border rounded-lg;
+}
+
+.panel-header {
+  @apply px-4 py-3 border-b border-elite-border;
+}
+
+.panel-title {
+  @apply text-elite-orange font-eurostile text-lg uppercase tracking-wider;
+}
+
+/* Button styles */
+.btn {
+  @apply px-4 py-2 rounded font-medium transition-colors;
+}
+
+.btn-primary {
+  @apply bg-elite-orange text-white hover:bg-orange-600;
+}
+
+.btn-secondary {
+  @apply bg-elite-dark border border-elite-orange text-elite-orange hover:bg-elite-border;
+}
+
+/* Input styles */
+.input {
+  @apply bg-elite-dark border border-elite-border rounded px-3 py-2 text-white focus:border-elite-orange focus:outline-none;
+}
