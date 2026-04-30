@@ -65,7 +65,7 @@ router.get('/commodities', authenticate, async (req: any, res) => {
     const result = await pool.query(
       'SELECT DISTINCT commodity_name FROM market_prices ORDER BY commodity_name'
     );
-    res.json(result.rows.map(r => r.commodity_name));
+    res.json(result.rows.map((r: any) => r.commodity_name));
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch commodities' });
   }
@@ -84,7 +84,7 @@ router.get('/systems', authenticate, async (req: any, res) => {
       'SELECT DISTINCT system_name FROM market_prices WHERE system_name ILIKE $1 ORDER BY system_name LIMIT 20',
       [`%${q}%`]
     );
-    res.json(result.rows.map(r => r.system_name));
+    res.json(result.rows.map((r: any) => r.system_name));
   } catch (error) {
     res.status(500).json({ error: 'Failed to search systems' });
   }
