@@ -1,7 +1,19 @@
 services:
+  # PostgreSQL Database
+  - type: pserv
+    name: elite-companion-db
+    env: postgresql
+    databaseName: elite_companion
+    user: elite
+    region: oregon
+    plan: free
+
+  # Backend API
   - type: web
     name: elite-companion-api
     env: node
+    region: oregon
+    plan: free
     rootDir: apps/api
     buildCommand: npm install && npm run build
     startCommand: npm start
@@ -14,6 +26,8 @@ services:
           property: connectionString
       - key: JWT_SECRET
         generateValue: true
+      - key: FRONTEND_URL
+        value: https://elite-companion.onrender.com
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
@@ -22,12 +36,12 @@ services:
         sync: false
       - key: DISCORD_CLIENT_SECRET
         sync: false
-      - key: FRONTEND_URL
-        value: https://elite-companion.onrender.com
 
+  # Frontend Static Site
   - type: web
     name: elite-companion
     env: static
+    region: oregon
     rootDir: apps/web
     buildCommand: npm install && npm run build
     staticPublishPath: dist
@@ -42,13 +56,5 @@ services:
         source: /auth/*
         destination: https://elite-companion-api.onrender.com/auth/*
       - type: rewrite
-        source: /socket.io/*
-        destination: https://elite-companion-api.onrender.com/socket.io/*
-      - type: rewrite
         source: /*
         destination: /index.html
-
-databases:
-  - name: elite-companion-db
-    databaseName: elite_companion
-    user: elite

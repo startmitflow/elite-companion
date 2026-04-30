@@ -7,7 +7,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/start.ts",
     "build": "tsc",
     "start": "node dist/start.js",
     "db:migrate": "tsx src/db/migrate.ts",
